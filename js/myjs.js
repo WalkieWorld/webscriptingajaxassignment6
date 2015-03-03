@@ -12,7 +12,9 @@ var MyObject = {
         data: undefined
     },
     init: function(){
-        this.ajax(this.option, 30000, this.callback);
+        this.addEvent(document.getElementById("btnFilter"), "click", function(e){
+            MyObject.btnEventFun(e);
+        });
     },
     ajax: function(option, timeout, callback){
         var request = new XMLHttpRequest();
@@ -43,6 +45,7 @@ var MyObject = {
     callback: function(data){
         var presidentsData = JSON.parse(data);
         MyObject.myPresidentsList = presidentsData.presidents.president;
+        MyObject.filter();
         MyObject.renderTable(MyObject.myPresidentsList);
     },
     renderTable: function(presidentList){
@@ -71,6 +74,50 @@ var MyObject = {
             }
             table.appendChild(tr);
         });
+    },
+    addEvent: function(handler, event, fun){
+        handler.addEventListener(event, fun);
+    },
+    btnEventFun: function(e){
+        e.preventDefault();
+        var table = document.getElementById("presidentTable");
+        var tbody = table.querySelector("tbody");
+        while (tbody.firstChild) {
+            tbody.removeChild(tbody.firstChild);
+        }
+        MyObject.ajax(this.option, 30000, this.callback);
+
+    },
+    filter: function(){
+        if(MyObject.myPresidentsList !== undefined && MyObject.myPresidentsList.length !== 0){
+            var name = document.getElementById("name");
+            var number = document.getElementById("number");
+            var birthday = document.getElementById("birthday");
+            if(number.value !== "" && number.value.toString().match(/^\d+$/) !== null){
+                MyObject.myPresidentsList = MyObject.myPresidentsList.filter(function(obj){
+                    if(obj.number.toString() === number.value){
+                        return obj;
+                    }
+                });
+            }
+            if(name.value !== ""){
+                if(name.value.match(/^[a-zA-Z]+$/) !== null){
+                    var myNameRegex = new RegExp(name.value.split("").join("|"));
+                    MyObject.myPresidentsList = MyObject.myPresidentsList.filter(function(obj){
+                        if(obj.name.match(myNameRegex)){
+                            return obj;
+                        }
+                    });
+                }
+            }
+            if(birthday.value !== "" && birthday.value.match(/^\d+$/) !== null){
+                MyObject.myPresidentsList = MyObject.myPresidentsList.filter(function(obj){
+                    if(obj.date.split("-")[0] === birthday.value){
+                        return obj;
+                    }
+                });
+            }
+        }
     }
 }
 MyObject.init();
