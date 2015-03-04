@@ -5,6 +5,14 @@
  */
 var MyObject = {
     myPresidentsList: undefined,
+    presidentDataStructure: [
+        "number",
+        "name",
+        "term",
+        "date",
+        "took_office",
+        "left_office"
+    ],
     option: {
         method: "GET",
         type: "",
@@ -52,8 +60,57 @@ var MyObject = {
         var table = document.getElementsByTagName("tbody").item(0);
         presidentList.forEach(function(curVal, index, arr){
             var tr = document.createElement("tr");
+            var tdNested = document.createElement("td");
             tr.classList.add("info");
-            for(var el in curVal){
+            var vicePresidentTable = function(vpList){
+                var table = document.createElement("table");
+                var thead = document.createElement("thead");
+                var tbody = document.createElement("tbody");
+                var tr = document.createElement("tr");
+                var th = document.createElement("th");
+                table.classList.add("nested-table");
+                table.classList.add("vice-president");
+                th.setAttribute("colspan", "2");
+                th.textContent = "Vice President";
+                tr.appendChild(th);
+                tr.classList.add("warning");
+                thead.appendChild(tr);
+                tr = document.createElement("tr");
+                tr.classList.add("warning");
+                var th = document.createElement("th");
+                th.textContent = "Number";
+                tr.appendChild(th);
+                th = document.createElement("th");
+                th.textContent = "Name";
+                tr.appendChild(th);
+                thead.appendChild(tr);
+                if(vpList instanceof Array){
+                    vpList.forEach(function(curVal, index, arr){
+                        var tr = document.createElement("tr");
+                        tr.classList.add("warning");
+                        for(var el in curVal){
+                            var td = document.createElement("td");
+                            td.textContent = curVal[el];
+                            tr.appendChild(td);
+                        }
+                        tbody.appendChild(tr);
+                    });
+                }else{
+                    var tr = document.createElement("tr");
+                    var td = document.createElement("td");
+                    td.textContent = curVal.number;
+                    tr.appendChild(td);
+                    td = document.createElement("td");
+                    td.textContent = curVal.name;
+                    tr.appendChild(td);
+                    tr.classList.add("warning");
+                    tbody.appendChild(tr);
+                }
+                table.appendChild(thead);
+                table.appendChild(tbody);
+                return table;
+            }
+            MyObject.presidentDataStructure.forEach(function(el, index, arr){
                 if(curVal.hasOwnProperty(el)){
                     if(el === "number"){
                         var th = document.createElement("th");
@@ -61,8 +118,7 @@ var MyObject = {
                         tr.appendChild(th);
                     }
                     if(
-                        el === "name"
-                        || el === "date"
+                        el === "date"
                         || el === "took_office"
                         || el === "left_office"
                     ){
@@ -70,9 +126,28 @@ var MyObject = {
                         td.textContent = curVal[el];
                         tr.appendChild(td);
                     }
+                    if(el === "name"){
+                        var subtable = document.createElement("table");
+                        var subtbody = document.createElement("tbody");
+                        var subtr = document.createElement("tr");
+                        var subtd =  document.createElement("td");
+                        subtd.setAttribute("colspan", "2");
+                        subtd.textContent = curVal[el];
+                        subtr.appendChild(subtd);
+                        subtbody.appendChild(subtr);
+                        subtable.appendChild(subtbody);
+                        tdNested.appendChild(subtable);
+                        tr.appendChild(tdNested);
+                        subtable.classList.add("nested-table");
+                    }
+                    if(el === "term" && curVal[el].length !== 0){
+                        var subtable = vicePresidentTable(curVal[el]);
+                        tdNested.appendChild(subtable);
+                        tr.appendChild(tdNested);
+                    }
                 }
-            }
-            table.appendChild(tr);
+                table.appendChild(tr);
+            });
         });
     },
     addEvent: function(handler, event, fun){

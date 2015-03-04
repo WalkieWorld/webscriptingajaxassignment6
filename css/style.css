@@ -24,14 +24,14 @@
         width: 1170px;
     }
 }
-#presidentTable{
+table{
     display: table;
     border-spacing: 0;
     border-collapse: collapse;
     width: 100%;
     height: 100%;
 }
-#presidentTable>thead>tr>th {
+table>thead>tr>th {
     vertical-align: bottom;
     border-bottom: 2px solid #ddd;
     padding: 8px;
@@ -39,14 +39,14 @@
     vertical-align: top;
     border-top: 1px solid #ddd;
 }
-#presidentTable>tbody>tr>th
+table>tbody>tr>th
 {
     padding: 8px;
     line-height: 1.42857143;
     vertical-align: top;
     border-top: 1px solid #ddd;
 }
-#presidentTable>tbody>tr>td{
+table>tbody>tr>td{
     padding: 8px;
     line-height: 1.42857143;
     vertical-align: top;
@@ -55,10 +55,31 @@
 th{
     text-align: left;
 }
-#presidentTable > tbody > tr.info:nth-child(2n) > td,
-#presidentTable > tbody > tr.info:nth-child(2n) > th
+table > tbody > tr.info:nth-child(2n) > td,
+table > tbody > tr.info:nth-child(2n) > th
 {
     background-color: #d9edf7;
+}
+table.nested-table tbody tr.warning td,
+table.nested-table tbody tr.warning th,
+table.nested-table thead tr.warning th
+{
+    background-color: #fcf8e3;
+}
+table.nested-table {
+    margin-top: -8px;
+}
+table.nested-table.vice-president{
+    margin-top: 8px;
+    margin-bottom: -8px;
+}
+table.nested-table td {
+    border-top: 0px;
+}
+table.nested-table.vice-president td,
+table.nested-table.vice-president th{
+    border: 1px solid #ddd;
+    text-align: center;
 }
 form{
     margin: 20px 5px;
